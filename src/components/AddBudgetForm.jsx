@@ -1,51 +1,90 @@
-// reacts
-import { useEffect, useRef } from "react";
-
-// rrd imports
-import { Form, useFetcher } from "react-router-dom";
+import React, { useState, useRef } from "react"; // Import useState along with useRef
+import axios from "axios";
 
 // library imports
 import { BanknotesIcon } from "@heroicons/react/24/solid";
 
+// colors
+const generateRandomColor = () => {
+  const randomHue = Math.floor(Math.random() * 360);
+  const saturation = "65%";
+  const lightness = "50%";
+  const randomColor = `hsl(${randomHue}, ${saturation}, ${lightness})`;
+
+  console.log("Random Color:", randomColor);
+
+  return randomColor;
+};
+
 const AddBudgetForm = () => {
-  const fetcher = useFetcher();
-  const isSubmitting = fetcher.state === "submitting";
+  const itemColor = generateRandomColor();
+  const [name, setName] = useState("");
+  const [amount, setAmount] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const formRef = useRef();
-  const focusRef = useRef();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  useEffect(() => {
-    if (!isSubmitting) {
-      formRef.current.reset();
-      focusRef.current.focus();
+    if (isSubmitting) {
+      return;
     }
-  }, [isSubmitting]);
+    setIsSubmitting(true);
+
+    try {
+      console.log(name, amount);
+      const response = await axios.post(
+        "http://localhost:3000/budget",
+        {
+          name,
+          amount: parseFloat(amount),
+          color: itemColor,
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      console.log("New budget created:", response.data);
+      setName("");
+      setAmount("");
+    } catch (error) {
+      console.error("Error creating new budget:", error);
+      alert("Can't create budget. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const focusRef = useRef(null);
 
   return (
     <div className="form-wrapper">
       <h2 className="h3">Create budget</h2>
-      <fetcher.Form method="post" className="grid-sm" ref={formRef}>
+      <form onSubmit={handleSubmit} className="grid-sm">
         <div className="grid-xs">
           <label htmlFor="newBudget">Budget Name</label>
           <input
             type="text"
-            name="newBudget"
+            name="name"
             id="newBudget"
             placeholder="Example: Groceries"
             required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             ref={focusRef}
           />
         </div>
         <div className="grid-xs">
           <label htmlFor="newBudgetAmount">Amount</label>
           <input
-            type="number"
+            type="text"
+            inputMode="numeric"
             step="1000"
-            name="newBudgetAmount"
+            name="amount"
             id="newBudgetAmount"
             placeholder="Rp. Example 35000"
             required
-            inputMode="decimal"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
           />
         </div>
         <input type="hidden" name="_action" value="createBudget" />
@@ -59,7 +98,7 @@ const AddBudgetForm = () => {
             </>
           )}
         </button>
-      </fetcher.Form>
+      </form>
     </div>
   );
 };

@@ -1,14 +1,20 @@
 // react imports
-import { useEffect, useRef } from "react";
-
+import React, { useState, useRef, useEffect } from "react";
+import axios from "axios";
 // rrd imports
+
 import { useFetcher } from "react-router-dom";
 
 // library imports
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 
 const AddExpenseForm = ({ budgets }) => {
+  const defaultBudgetId = budgets.length === 1 ? budgets[0].id : "";
   const fetcher = useFetcher();
+  const [expenseName, setExpenseName] = useState("");
+  const [expenseAmount, setExpenseAmount] = useState("");
+  const [selectedBudgetId, setSelectedBudgetId] = useState(defaultBudgetId);
+
   const isSubmitting = fetcher.state === "submitting";
 
   const formRef = useRef();
@@ -16,12 +22,40 @@ const AddExpenseForm = ({ budgets }) => {
 
   useEffect(() => {
     if (!isSubmitting) {
-      // clear form
-      formRef.current.reset();
-      // reset focus
+      setExpenseName("");
+      setExpenseAmount("");
       focusRef.current.focus();
     }
   }, [isSubmitting]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (isSubmitting) {
+      return;
+    }
+    try {
+      await axios.post(
+        `http://localhost:3000/expense/${selectedBudgetId}`,
+        {
+          name: expenseName,
+          amount: parseFloat(expenseAmount),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log("New selectedBudgetId", selectedBudgetId);
+      setExpenseName("");
+      setExpenseAmount("");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error creating new expense:", error);
+      alert("Can't create expense. Please try again.");
+    }
+  };
 
   return (
     <div className="form-wrapper">
@@ -32,7 +66,7 @@ const AddExpenseForm = ({ budgets }) => {
         </span>{" "}
         Expense
       </h2>
-      <fetcher.Form method="post" className="grid-sm" ref={formRef}>
+      <form onSubmit={handleSubmit} className="grid-sm" ref={formRef}>
         <div className="expense-inputs">
           <div className="grid-xs">
             <label htmlFor="newExpense">Expense Name</label>
@@ -43,6 +77,8 @@ const AddExpenseForm = ({ budgets }) => {
               placeholder="Example: Coffee"
               ref={focusRef}
               required
+              value={expenseName}
+              onChange={(e) => setExpenseName(e.target.value)}
             />
           </div>
           <div className="grid-xs">
@@ -55,21 +91,25 @@ const AddExpenseForm = ({ budgets }) => {
               id="newExpenseAmount"
               placeholder="Example: 3500"
               required
+              value={expenseAmount}
+              onChange={(e) => setExpenseAmount(e.target.value)}
             />
           </div>
         </div>
         <div className="grid-xs" hidden={budgets.length === 1}>
           <label htmlFor="newExpenseBudget">Budget Category</label>
-          <select name="newExpenseBudget" id="newExpenseBudget" required>
-            {budgets
-              .sort((a, b) => a.createdAt - b.createdAt)
-              .map((budget) => {
-                return (
-                  <option key={budget.id} value={budget.id}>
-                    {budget.name}
-                  </option>
-                );
-              })}
+          <select
+            name="newExpenseBudget"
+            id="newExpenseBudget"
+            required
+            value={selectedBudgetId}
+            onChange={(e) => setSelectedBudgetId(e.target.value)}
+          >
+            {budgets.map((budget) => (
+              <option key={budget.id} value={budget.id}>
+                {budget.name}
+              </option>
+            ))}
           </select>
         </div>
         <input type="hidden" name="_action" value="createExpense" />
@@ -83,8 +123,9 @@ const AddExpenseForm = ({ budgets }) => {
             </>
           )}
         </button>
-      </fetcher.Form>
+      </form>
     </div>
   );
 };
+
 export default AddExpenseForm;

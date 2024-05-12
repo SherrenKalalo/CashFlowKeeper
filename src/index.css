@@ -149,7 +149,7 @@ p {
   --color: hsl(var(--bkg));
   background-color: var(--backdrop);
   color: var(--color);
-  padding: var(--space-xs) var(--space-sm);
+  padding: var(--space-xs) var(--space-lg);
   border: 2px solid var(--backdrop);
   font-size: var(--fs-300);
   text-decoration: none;
@@ -483,7 +483,7 @@ select {
   box-shadow: 0.25em 0.3em 1em hsl(var(--muted) / 0.2);
   background-color: var(--bkg);
   border-radius: var(--round-lg);
-  border: 3px solid hsl(var(--backdrop));
+  border: 3px solid var(--backdrop);
   padding: calc(var(--space-md) / 1.5) calc(var(--space-md) / 1.2);
   gap: var(--space-sm);
   text-decoration: none;

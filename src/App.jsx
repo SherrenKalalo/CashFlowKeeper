@@ -19,6 +19,7 @@ import ExpensesPage, {
   expensesAction,
   expensesLoader,
 } from "./pages/ExpensesPage";
+import Intro from "./components/Intro";
 
 const router = createBrowserRouter([
   {
@@ -28,7 +29,14 @@ const router = createBrowserRouter([
     errorElement: <Error />,
     children: [
       {
-        index: true,
+        path: "/",
+        element: <Intro />,
+        loader: dashboardLoader,
+        action: dashboardAction,
+        errorElement: <Error />,
+      },
+      {
+        path: "dashboard",
         element: <Dashboard />,
         loader: dashboardLoader,
         action: dashboardAction,

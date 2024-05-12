@@ -93,3 +93,7 @@ export const formatCurrency = (amt) => {
   // });
   return amt.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
 };
+
+{
+  /*      Konfigurasi dengan backend      */
+}
