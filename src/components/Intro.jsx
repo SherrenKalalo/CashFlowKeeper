@@ -63,7 +63,7 @@ const Intro = () => {
   return (
     <div className="intro">
       <div>
-        <h1>Welcome to HALOOOOO</h1>
+        <h1>Welcome to</h1>
         <h1 className="accent">Cash Flow Keeper</h1>
         <p>
           Your personal or family financial management assistant. Take control
