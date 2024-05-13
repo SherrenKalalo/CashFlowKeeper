@@ -96,7 +96,9 @@ const Dashboard = () => {
     const fetchExpense = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/expense/${localStorage.getItem("id")}`,
+          `https://be-cash-flow-keeper.vercel.app/expense/${localStorage.getItem(
+            "id"
+          )}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -117,7 +119,7 @@ const Dashboard = () => {
     const fetchBudgets = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/budget/list/me",
+          "https://be-cash-flow-keeper.vercel.app/budget/list/me",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

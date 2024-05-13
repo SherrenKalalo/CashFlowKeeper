@@ -36,7 +36,7 @@ const AddExpenseForm = ({ budgets }) => {
     }
     try {
       await axios.post(
-        `http://localhost:3000/expense/${selectedBudgetId}`,
+        `https://be-cash-flow-keeper.vercel.app/expense/${selectedBudgetId}`,
         {
           name: expenseName,
           amount: parseFloat(expenseAmount),

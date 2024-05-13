@@ -23,11 +23,14 @@ const Table = ({ budgets, expenses, showBudget = true }) => {
   const handleDeleteExpense = async (expenseId) => {
     try {
       setIsDeleting(true);
-      await axios.delete(`http://localhost:3000/expense/${expenseId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      await axios.delete(
+        `https://be-cash-flow-keeper.vercel.app/expense/${expenseId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       setTimeout(() => {
         window.location.reload();
       }, 500);
@@ -52,7 +55,7 @@ const Table = ({ budgets, expenses, showBudget = true }) => {
     try {
       setIsEditing(true);
       await axios.put(
-        `http://localhost:3000/expense/${editedExpense.id}`,
+        `https://be-cash-flow-keeper.vercel.app/expense/${editedExpense.id}`,
         {
           name: editedExpense.name,
           amount: editedExpense.amount,
@@ -95,8 +98,8 @@ const Table = ({ budgets, expenses, showBudget = true }) => {
             );
             return (
               <tr key={expense.id}>
-                <td>
-                  {isEditing && editedExpense.id === expense.id ? (
+                {isEditing && editedExpense.id === expense.id ? (
+                  <td>
                     <input
                       type="text"
                       value={editedExpense.name}
@@ -106,12 +109,12 @@ const Table = ({ budgets, expenses, showBudget = true }) => {
                           name: e.target.value,
                         })
                       }
-                      style={{ width: "350px" }}
+                      style={{ width: "200px", padding: 0 }}
                     />
-                  ) : (
-                    expense.name
-                  )}
-                </td>
+                  </td>
+                ) : (
+                  <td>{expense.name}</td>
+                )}
                 <td>
                   {isEditing && editedExpense.id === expense.id ? (
                     <p>{formatCurrency(expense.amount)}</p>

@@ -14,8 +14,8 @@ const Intro = () => {
 
     try {
       const endpoint = isRegistering
-        ? "http://localhost:3000/authentication/register"
-        : "http://localhost:3000/authentication/login";
+        ? "https://be-cash-flow-keeper.vercel.app/authentication/register"
+        : "https://be-cash-flow-keeper.vercel.app/authentication/login";
 
       const response = await axios.post(endpoint, { username, password });
 
@@ -40,10 +40,13 @@ const Intro = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:3000/authentication/register", {
-        username,
-        password,
-      });
+      await axios.post(
+        "https://be-cash-flow-keeper.vercel.app/authentication/register",
+        {
+          username,
+          password,
+        }
+      );
 
       alert("Registration successful! Please login.");
       setIsRegistering(false);
@@ -60,7 +63,7 @@ const Intro = () => {
   return (
     <div className="intro">
       <div>
-        <h1>Welcome to</h1>
+        <h1>Welcome to HALOOOOO</h1>
         <h1 className="accent">Cash Flow Keeper</h1>
         <p>
           Your personal or family financial management assistant. Take control

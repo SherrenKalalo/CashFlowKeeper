@@ -15,9 +15,12 @@ const Nav = () => {
 
   const cekUser = async (e) => {
     try {
-      const response = await axios.get("http://localhost:3000/budget/list/me", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axios.get(
+        "https://be-cash-flow-keeper.vercel.app/budget/list/me",
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
 
       const status = response.data.status;
 

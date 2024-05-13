@@ -33,7 +33,7 @@ const AddBudgetForm = () => {
     try {
       console.log(name, amount);
       const response = await axios.post(
-        "http://localhost:3000/budget",
+        "https://be-cash-flow-keeper.vercel.app/budget",
         {
           name,
           amount: parseFloat(amount),
